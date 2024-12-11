@@ -60,7 +60,7 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
         syms x y z d
         % x0 = [0; 0; 6370; 0];
         if i==1
-            x0 = [R; 0; 0; 0];
+            x0 = [0; 0; R; 0];
         else 
             x0=xAll(:, i-1);
         end
