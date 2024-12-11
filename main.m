@@ -1,19 +1,14 @@
 clear all; clc; close all; 
 % independent variables (play around with these)
-numSatelites = 10; 
+numSatelites = 30; 
 stepdist = 10; 
 noisefactor = 1e-10; 
-bearing=0; %zero is east
-lat = 0; % Initial latitude (degrees)
-long = 0; % Initial longitude (degrees)
+numPoints=100;
 
-earthCircum=40075;
-dist=40000;
-numMoves = dist/stepdist;
-[error,actualPos, estPos, satPos] = GPSMove(numSatelites, numMoves, stepdist, noisefactor, bearing, lat, long);
+[error,actualPos, estPos, satPos] = GPSMove(numSatelites, numPoints, noisefactor);
 plotGPS(estPos, actualPos, satPos)
 figure();
-plot(1:numMoves, error,'r')
+plot(1:numPoints, error,'r')
 title("num sat: 4")
 hold on;
 %numSatelites = 5; 

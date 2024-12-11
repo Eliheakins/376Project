@@ -1,6 +1,6 @@
 function x = newtons_method_n2(f_wrapper, J_wrapper, x0)
     tol = 1e-6;  
-    max_iter = 100; % otherwise too slow
+    max_iter = 10000; % otherwise too slow
     x = x0;
     for iter = 1:max_iter
         f_val = f_wrapper(x);
@@ -15,6 +15,7 @@ function x = newtons_method_n2(f_wrapper, J_wrapper, x0)
         end
         %gamma = 0.01;
         if norm(f_val) < tol
+            disp("Good")
             break;
         end
         
