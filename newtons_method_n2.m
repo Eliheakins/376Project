@@ -12,7 +12,7 @@ function x = newtons_method_n2(f_wrapper, J_wrapper, x0)
         
         x = x + delta;
         if norm(delta) < tol
-            break;
+            return;
         end
     end
 end

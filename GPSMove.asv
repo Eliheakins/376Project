@@ -9,7 +9,6 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
     pos = [];
     phi = pi/6;
     theta = linspace(0, 2*pi, numSatelites + 1);  
-    disp(theta)
     xAll = zeros(4, numMoves);
     error = zeros(1, numMoves);
     initialPositions = zeros(3, numMoves);
@@ -17,7 +16,7 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
     % Initialize satellite positions
     for i = 1:numSatelites
         pos(i, :) = [
-            satZ * sin(phi), %flipped x and z for moving the satellites, will clean up later
+            satZ * sin(phi),
             %satZ * cos(phi) * cos(theta(i)),
             satZ * cos(phi) * sin(theta(i)),
             satZ * cos(phi) * cos(theta(i))
@@ -27,22 +26,23 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
     
     % Convert bearing to radians
     bearingRad = deg2rad(bearing);
-    % Convert Initial long and lat to radians
-    lat=deg2rad(lat);
-    long=deg2rad(long);
     
     for i = 1:numMoves
         % Update latitude and longitude based on step distance using
         % Haversine formula
+        latR=deg2rad(lat);
+        longR=deg2rad(long);
         centralAngle=stepdist/R;
-        lat2 = asin(sin(lat)*cos(centralAngle)+cos(lat)*sin(centralAngle)*(cos(bearingRad)));
-        long = long + atan2(sin(bearingRad)*sin(centralAngle)*cos(lat),cos(centralAngle)-sin(lat)*sin(lat2));
+        lat2 = asin(sin(latR)*cos(centralAngle)+cos(latR)*sin(centralAngle)*(cos(bearingRad)));
+        long = long + atan2(sin(bearingRad)*sin(centralAngle)*cos(latR),cos(centralAngle)-sin(latR)*sin(lat2));
         lat=lat2;
+        disp(lat)
+        disp(long)
         
         % Convert updated latitude and longitude to Cartesian coordinates
-        x = R * cos(lat) * cos(long);
-        y = R * cos(lat) * sin(long);
-        z = R * sin(lat);
+        x = R * cos(deg2rad(lat)) * cos(deg2rad(long));
+        y = R * cos(deg2rad(lat)) * sin(deg2rad(long));
+        z = R * sin(deg2rad(lat));
         initialPosActual = [x, y, z];
         
         % Store the calculated position
@@ -59,11 +59,7 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
         
         % Calculate phone position using times
         syms x y z d
-        if i==1
-            x0 = [R; 0; 0; 0];
-        else 
-            x0=xAll(:, i-1);
-        end
+        x0 = [R; 0; 0; 0];
         A = pos(:, 1); B = pos(:, 2); C = pos(:, 3); % Satellite positions
         
         fSym = sym([]);
