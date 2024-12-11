@@ -5,10 +5,10 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
     surfaceZ = 6370; % Earth's radius in km
     R = surfaceZ; % Earth's radius for polar calculations
 
-    % Satellite positions (?)
+    % Satellite positions
     pos = [];
-    phi = pi/6;
-    theta = linspace(0, 2*pi, numSatelites + 1);  
+    phi = rand(1, numSatelites) * 2 * pi;  % Generate a random phi for each satellite
+    theta = rand(1, numSatelites) * 2 * pi; % Generate a random theta for each satellite
     disp(theta)
     xAll = zeros(4, numMoves);
     error = zeros(1, numMoves);
@@ -17,11 +17,9 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
     % Initialize satellite positions
     for i = 1:numSatelites
         pos(i, :) = [
-            satZ * sin(phi), %flipped x and z for moving the satellites, will clean up later
-            %satZ * cos(phi) * cos(theta(i)),
-            satZ * cos(phi) * sin(theta(i)),
-            satZ * cos(phi) * cos(theta(i))
-            %satZ * sin(phi)
+            satZ * cos(phi(i)) * cos(theta(i));
+            satZ * cos(phi(i)) * sin(theta(i));
+            satZ * sin(phi(i)),
         ];
     end
     
