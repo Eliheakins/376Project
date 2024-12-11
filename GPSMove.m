@@ -75,7 +75,7 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
                 distance(j) = norm(visiblePos(j, :) - initialPosActual);
                 randnoise(j) = rand() * noisefactor * i; % Scaled noise
             end
-            t = distance ./ signalspeed + randnoise * 0;
+            t = distance ./ signalspeed + randnoise;
             [~, sortedIndices] = sort(t); % Sort by distance
             xClosestIndices = sortedIndices(1:numUsedSat);
 
