@@ -80,7 +80,7 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
         J_wrapper = @(v) J_num(v(1), v(2), v(3), v(4));
         
         % Numerical solution using Newton's method
-        x = newtons_method_n2(f_wrapper, J_wrapper, x0);
+        x = updatedmethod(f_wrapper, J_wrapper, x0);
         error(1, i) = norm(x(1:3)' - initialPosActual);
         xAll(:, i) = x;
         
