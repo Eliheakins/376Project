@@ -5,7 +5,7 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
     surfaceZ = 6370; % Earth's radius in km
     R = surfaceZ; % Earth's radius for polar calculations
 
-    % Satellite positions
+    % Satellite positions (?)
     pos = [];
     phi = pi/6;
     theta = linspace(0, 2*pi, numSatelites + 1);  
@@ -40,12 +40,11 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
         lat=lat2;
         
         % Convert updated latitude and longitude to Cartesian coordinates
-        x = R * cos(lat) * cos(long);
-        y = R * cos(lat) * sin(long);
-        z = R * sin(lat);
-        initialPosActual = [x, y, z];
+        x = R *sin(long);
+        y = R * cos(long) * sin(lat);
+        z = R * cos(long)*cos(lat);
         
-        % Store the calculated position
+        initialPosActual = [x, y, z];
         initialPositions(:, i) = initialPosActual';
         
         % Noise and distance calculation
@@ -59,6 +58,7 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
         
         % Calculate phone position using times
         syms x y z d
+        % x0 = [0; 0; 6370; 0];
         if i==1
             x0 = [R; 0; 0; 0];
         else 
@@ -86,7 +86,7 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
         
         % Display progress every 10 iterations
         if mod(i, 10) == 0
-            %disp(i);
+            disp(i);
         end
     end
 end
