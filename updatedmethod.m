@@ -1,4 +1,4 @@
-function x = newtons_method_n2(f_wrapper, J_wrapper, x0)
+function x = updatedmethod(f_wrapper, J_wrapper, x0)
     tol = 1e-6;  
     max_iter = 100; % otherwise too slow
     x = x0;

@@ -1,9 +1,9 @@
 clear all; clc; close all; 
 % independent variables (play around with these)
-numSatelites = 200; 
-stepdist = 100; 
-noisefactor = 0; 
-bearing=90; %zero is north
+numSatelites = 10; 
+stepdist = 10; 
+noisefactor = 1e-10; 
+bearing=90; %zero is east
 lat = 0; % Initial latitude (degrees)
 long = 0; % Initial longitude (degrees)
 
