@@ -40,11 +40,11 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
         lat=lat2;
         
         % Convert updated latitude and longitude to Cartesian coordinates
-        x = R *sin(long);
+        x = R * cos(long)*cos(lat);
         y = R * cos(long) * sin(lat);
-        z = R * cos(long)*cos(lat);
+        z = R *sin(long);
         
-        initialPosActual = [x, y, z];
+        initialPosActual = [z, y, x];
         initialPositions(:, i) = initialPosActual';
         
         % Noise and distance calculation
@@ -54,7 +54,7 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
             distance(j) = norm(pos(j, :) - initialPosActual);
             randnoise(j) = rand() * noisefactor * i; % Scaled noise
         end
-        t = distance ./ signalspeed + randnoise;
+        t = distance ./ signalspeed + randnoise*0;
         
         % Calculate phone position using times
         syms x y z d

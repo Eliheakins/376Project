@@ -1,6 +1,6 @@
 clear all; clc; close all; 
 % independent variables (play around with these)
-numSatelites = 4; 
+numSatelites = 5; 
 stepdist = 100; 
 noisefactor = 1e-10; 
 bearing=0;

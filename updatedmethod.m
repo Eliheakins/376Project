@@ -1,6 +1,6 @@
 function x = newtons_method_n2(f_wrapper, J_wrapper, x0)
     tol = 1e-6;  
-    max_iter = 50; % otherwise too slow
+    max_iter = 100; % otherwise too slow
     x = x0;
     for iter = 1:max_iter
         f_val = f_wrapper(x);
