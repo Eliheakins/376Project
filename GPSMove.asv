@@ -42,9 +42,35 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
         y = R * cos(long) * sin(lat);
         z = R *sin(long);
         
-        initialPosActual = [z, y, x];
+        initialPosActual = [x, y, z];
         initialPositions(:, i) = initialPosActual';
         
+        % Calculate which sats phone has view of
+        %declaring alternate names for variables for clarity
+        x1=x; %1 denotes pos of phone
+        y1=y;
+        z1=z;
+        x3=0; %3 denotes pos of earth
+        y3=0;
+        z3=0;
+        satsNoView=[];
+        for i=1:numSatelites
+            x2=pos(i,1);
+            y2=pos(i,2);
+            z2=pos(i,3);
+            a=(x2-x1)^2+(y2-y1)^2+(z2-z1)^2;
+            b=2*((x2-x1)*(x1-x3)+(y2-y1)*(y1-y3)+(z2-z1)*(z1-z3));
+            c=x3^2+y3^2+z3^2+x1^2+y1^2+z1^2-2*(x3*x1+y3*y1+z3*z1)-R^2;
+            sqrtOfQuadraticEq=b*b-4*a*c;
+            if sqrtOfQuadraticEq <=0 %phone can not see sat
+                satsNoView(end+1)=i; %keep track of "bad" sats
+            end
+
+        end
+        pos(satsNoView,:)=[];
+        [rownum, colnum]=size(pos);
+        if 
+
         % Noise and distance calculation
         randnoise = zeros(numSatelites, 1);
         distance = zeros(numSatelites, 1);

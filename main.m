@@ -1,14 +1,14 @@
 clear all; clc; close all; 
 % independent variables (play around with these)
-numSatelites = 8; 
-stepdist = 100; 
+numSatelites = 10; 
+stepdist = 10; 
 noisefactor = 1e-10; 
-bearing=90;
+bearing=0; %zero is east
 lat = 0; % Initial latitude (degrees)
 long = 0; % Initial longitude (degrees)
 
 earthCircum=40075;
-dist=10000;
+dist=40000;
 numMoves = dist/stepdist;
 [error,actualPos, estPos, satPos] = GPSMove(numSatelites, numMoves, stepdist, noisefactor, bearing, lat, long);
 plotGPS(estPos, actualPos, satPos)

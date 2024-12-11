@@ -28,5 +28,5 @@ function x = newtons_method_n2(f_wrapper, J_wrapper, x0)
          %   break;
         %end
     end
-    disp(norm(f_val))
+    %disp(norm(f_val))
 end
