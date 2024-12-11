@@ -8,8 +8,8 @@ lat = 0; % Initial latitude (degrees)
 long = 0; % Initial longitude (degrees)
 
 earthCircum=40075;
-toNPole=10000;
-numMoves = toNPole/stepdist;
+dist=10000;
+numMoves = dist/stepdist;
 [error,actualPos, estPos, satPos] = GPSMove(numSatelites, numMoves, stepdist, noisefactor, bearing, lat, long);
 plotGPS(estPos, actualPos, satPos)
 figure();

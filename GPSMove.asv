@@ -5,10 +5,10 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
     surfaceZ = 6370; % Earth's radius in km
     R = surfaceZ; % Earth's radius for polar calculations
 
-    % Satellite positions (?)
+    % Satellite positions
     pos = [];
-    phi = pi/6;
-    theta = linspace(0, 2*pi, numSatelites + 1);  
+    phi = rand(1, numSatelites) * 2 * pi;  % Generate a random phi for each satellite
+    theta = rand(1, numSatelites) * 2 * pi; % Generate a random theta for each satellite
     disp(theta)
     xAll = zeros(4, numMoves);
     error = zeros(1, numMoves);
@@ -17,11 +17,9 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
     % Initialize satellite positions
     for i = 1:numSatelites
         pos(i, :) = [
-            satZ * sin(phi), %flipped x and z for moving the satellites, will clean up later
-            %satZ * cos(phi) * cos(theta(i)),
-            satZ * cos(phi) * sin(theta(i)),
-            satZ * cos(phi) * cos(theta(i))
-            %satZ * sin(phi)
+            satZ * cos(phi(i)) * cos(theta(i));
+            satZ * cos(phi(i)) * sin(theta(i));
+            satZ * sin(phi(i)),
         ];
     end
     
@@ -54,21 +52,24 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
             distance(j) = norm(pos(j, :) - initialPosActual);
             randnoise(j) = rand() * noisefactor * i; % Scaled noise
         end
-        t = distance ./ signalspeed + randnoise*;
-        
+        numUsedSat=4;
+        t = distance ./ signalspeed + randnoise*0;
+        [~, sortedIndices] = sort(t); % Sort distances
+        xClosestIndices = sortedIndices(1:numUsedSat); % Indices of x closest satellites
         % Calculate phone position using times
         syms x y z d
         % x0 = [0; 0; 6370; 0];
         if i==1
-            x0 = [0; 0; R; 0];
+            x0 = [0; 0; 0; 0];
         else 
             x0=xAll(:, i-1);
         end
-        A = pos(:, 1); B = pos(:, 2); C = pos(:, 3); % Satellite positions
+        A = pos(xClosestIndices, 1); B = pos(xClosestIndices, 2); C = pos(xClosestIndices, 3); t= t(xClosestIndices); % Only uses closest sats
         
         fSym = sym([]);
-        for j = 1:numSatelites
-            % Function to minimize for each satellite
+        for j = 1:numUsedSat
+            % Function to minimize for each satellite, using only the
+            % numUsedSat number of sats
             fSym(j) = (x - A(j))^2 + (y - B(j))^2 + (z - C(j))^2 - (signalspeed * (t(j) - d))^2;
         end
         fSym = fSym';

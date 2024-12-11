@@ -52,21 +52,24 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
             distance(j) = norm(pos(j, :) - initialPosActual);
             randnoise(j) = rand() * noisefactor * i; % Scaled noise
         end
+        numUsedSat=4;
         t = distance ./ signalspeed + randnoise*0;
-        
+        [~, sortedIndices] = sort(t); % Sort distances
+        xClosestIndices = sortedIndices(1:numUsedSat); % Indices of x closest satellites
         % Calculate phone position using times
         syms x y z d
         % x0 = [0; 0; 6370; 0];
         if i==1
-            x0 = [0; 0; R; 0];
+            x0 = [0; 0; 0; 0];
         else 
             x0=xAll(:, i-1);
         end
-        A = pos(:, 1); B = pos(:, 2); C = pos(:, 3); % Satellite positions
+        A = pos(xClosestIndices, 1); B = pos(xClosestIndices, 2); C = pos(xClosestIndices, 3); t= t(xClosestIndices); % Only uses closest sats
         
         fSym = sym([]);
-        for j = 1:numSatelites
-            % Function to minimize for each satellite
+        for j = 1:numUsedSat
+            % Function to minimize for each satellite, using only the
+            % numUsedSat number of sats
             fSym(j) = (x - A(j))^2 + (y - B(j))^2 + (z - C(j))^2 - (signalspeed * (t(j) - d))^2;
         end
         fSym = fSym';
