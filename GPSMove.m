@@ -61,7 +61,7 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
         % Check if there are enough satellites
         numUsedSat = 6; % Minimum satellites needed
         if numVisibleSats < numUsedSat
-            disp("Not enough well-positioned satellites to determine position");
+            %disp("Not enough well-positioned satellites to determine position");
             if i > 1
                 x = xAll(:, i-1); % Use previous position as fallback
             else
@@ -113,8 +113,8 @@ function [error, initialPositions, xAll, pos] = GPSMove(numSatelites, numMoves, 
         xAll(:, i) = x;
 
         % Display progress every 10 iterations
-        if mod(i, 10) == 0
-            fprintf('Iteration: %d\n', i);
-        end
+        %if mod(i, 10) == 0
+            %fprintf('Iteration: %d\n', i);
+        %end
     end
 end
